@@ -7,12 +7,38 @@
 
 from scrapy import Item, Field
 
+class TalkEntry(Item):
+    url = Field()
+    theme = Field()
+    crawl_date = Field()
+    post_date = Field()
+    body = Field()
+    user = Field()
+
+    heart_count = Field()
+    comment_count = Field()
+
+    comments = Field()
+
+
+class Comment(Item):
+    body = Field()
+    user = Field()
+    heart_count = Field()
+
+
+class User(Item):
+    user_id = Field()
+    name = Field()
+    age = Field()
+
 
 class BlogEntry(Item):
     url = Field()
-    heading = Field()
+    title = Field()
     theme = Field()
-    post_timestamp = Field()
+    crawl_date = Field()
+    post_date = Field()
     body = Field()
     blogger_id = Field()
 
