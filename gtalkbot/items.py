@@ -25,6 +25,7 @@ class Comment(Item):
     body = Field()
     user = Field()
     heart_count = Field()
+    replies = Field()
 
 
 class User(Item):

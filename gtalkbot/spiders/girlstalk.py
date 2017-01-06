@@ -56,8 +56,8 @@ class GirlsTalkTalkSpider(CrawlSpider):
 
         entry['crawl_date'] = datetime.utcnow().replace(tzinfo=SimpleUtc()).isoformat()
         date = response.css('article p.grid__cell span.u-c-gray::text') \
-                            .extract_first('') \
-                            .split(u'・')
+                       .extract_first('') \
+                       .split(u'・')
         if date and len(date) > 1:
             entry['post_date'] = date[1]
 
@@ -118,6 +118,7 @@ class GirlsTalkTalkSpider(CrawlSpider):
 
     def scrape_comments(self, response):
         comments = []
+        prev_comment = None
         for li in response.css('.js-ui-ccomment li.list-a__item'):
             comment = Comment()
             comment['body'] = li.css('p:nth-child(2)::text').extract()
@@ -127,7 +128,15 @@ class GirlsTalkTalkSpider(CrawlSpider):
             comment['heart_count'] = convert_to_int_if_int(
                 li.css('ul.js-ui-like span.js-ui-like__cnt::text').extract_first('')
             )
-            comments.append(comment)
+            comment['replies'] = []
+
+            is_child = bool(li.css('::attr(data-relation)'))
+            if is_child and prev_comment:
+                prev_comment['replies'].append(comment)
+            else:
+                comments.append(comment)
+                prev_comment = comment
+
         return comments
 
 
